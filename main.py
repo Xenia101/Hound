@@ -5,10 +5,9 @@ from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 from threading import Thread
 from tkinter import *
-import tkinter as tk
-from tkinter import filedialog
 import tkinter.font as tkFont
 import tkinter.ttk as ttk
+import tkinter as tk
 import requests
 import os.path
 import codecs
@@ -19,11 +18,7 @@ import os
 
 def openfile():
     del categorylist[0:]
-    
     window.filename = filedialog.askopenfilenames(initialdir = "C:/",title = "파일을 선택하세요")
-
-    print(window.filename)
-    
     file_count = len(window.filename)
 
     for x in range(file_count):
@@ -34,7 +29,6 @@ def openfile():
             file_list = [os.path.basename(window.filename[x]), upload(window.filename[x], API), 'dangerous'] # 위험 dangerous
         elif 70 < num and num <= 100:
             file_list = [os.path.basename(window.filename[x]), upload(window.filename[x], API), 'malicious'] # 악성 malicious
-            
         categorylist.append(file_list)
         
     listbox._build_tree()
@@ -45,7 +39,7 @@ def upload(file_, api_key):
     response = requests.post("https://public.api.malwares.com/v3/file/upload", files=files, data=params)
     json_response = response.json()
     hash = json_response['sha256']
-    print(hash)
+    # print(hash)
     return hash
 
 def summary(file_, api_key, hash_):
@@ -58,7 +52,7 @@ def summary(file_, api_key, hash_):
     #    security = json_response['behavior']['w7_32_kor']['security_level']
 
     ai_score = json_response['ai_score']
-    print(ai_score)
+    # print(ai_score)
     return ai_score
 
 def filesave():
@@ -68,7 +62,6 @@ def filesave():
     wr.writerow(['번호', '파일명(원본)', '파일명(SHA256)', '파일조회결과'])
     for x in range(count):
         wr.writerow([x+1, categorylist[x][0], categorylist[x][1], categorylist[x][2]])
-        
     f.close()
 
 class Watcher:
